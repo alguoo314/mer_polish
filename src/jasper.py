@@ -5,8 +5,7 @@ import os
 import argparse
 import math
 import csv
-from Bio import pairwise2
-from Bio.pairwise2 import format_alignment
+from Bio.Align import PairwiseAligner
 import dna_jellyfish as jf
 
 def main(contigs,query_path,k,test,fix,fout,fixedout,db,thre,num_iter):
@@ -306,7 +305,12 @@ def fixing_sid(seq,to_be_fixed,k,threshold,qf,num_below_thres_kmers,good_before,
                 fixed_ind = []
                 fixed_base = []
                 original = []
-                difference = pairwise2.align.globalms(fixed_seq,seq[good_before+1:good_after],0,-1,-1,-1)[0] #penalize subs and gaps equally
+                aligner = PairwiseAligner()
+                aligner.match_score = 0
+                aligner.mismatch_score = -1
+                aligner.open_gap_score = -1
+                aligner.extend_gap_score = -1
+                difference = aligner.align(fixed_seq, seq[good_before + 1:good_after])[0]
                 fixed_seq_rep = difference[0]
                 original_rep = difference[1]
                 seq = seq[:good_before+1]+fixed_seq+seq[good_after:]
