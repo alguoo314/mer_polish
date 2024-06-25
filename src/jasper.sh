@@ -9,7 +9,7 @@ BATCH_SIZE=0
 MAX_BATCH_SIZE=25000000
 PASSES=2
 KMER=37
-JF_SIZE=0
+JF_SIZE=1000000
 DEBUG=false
 QUERY="random.fa"
 QUERY_FN="random.fa"
@@ -79,7 +79,7 @@ do
             ;;
 	-r|--reads)
 	    export READS="$2"
-	    export JF_SIZE=`stat -c%s $READS |awk '{n+=$1}END{print int(n/10)}'`
+	    export JF_SIZE=`stat -c%s $READS |perl -ane '{$n+=$F[0]}END{$n=$n/10;$n=1e12 if($n>1e12);print int($n)}'`
 	    shift
 	    ;;
         -p|--num_passes)
@@ -173,7 +173,6 @@ if [ -z ${JF_DB+x} ];then
           rm -f jasper.no_cat.success
         else
 	  log "Creating jellyfish database $JF_DB"
-	  JF_SIZE=$(echo "$JF_SIZE" | awk '{ printf "%.0f", $1 }')
      	  zcat -f $READS | jellyfish count -C -s $JF_SIZE -m $KMER -o /dev/stdout -t $NUM_THREADS /dev/stdin | tee $JF_DB | jellyfish histo -t $NUM_THREADS /dev/stdin > jfhisto$KMER.csv.tmp && \
 	  mv jfhisto$KMER.csv.tmp jfhisto$KMER.csv && \
      	  touch jasper.no_cat.success  && \

@@ -21,4 +21,4 @@ AM_CXXFLAGS = -Wall -Werror -g -O2 -I$(top_srcdir)/src
 #noinst_HEADERS += src/test.hpp
 #YAGGO_SOURCES += src/test_cmdline.hpp
 
-dist_bin_SCRIPTS = src/jasper.sh src/jasper.py src/jellyfish.py jellyfish-2.3.0.tar.gz
+dist_bin_SCRIPTS = src/jasper.sh src/jasper.py src/jellyfish.py jellyfish-2.3.1.tar.gz
