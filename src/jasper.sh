@@ -79,7 +79,7 @@ do
             ;;
 	-r|--reads)
 	    export READS="$2"
-	    export JF_SIZE=`stat -c%s $READS |perl -ane '{$n+=$F[0]}END{$n=$n/10;$n=1e12 if($n>1e12);print int($n)}'`
+	    export JF_SIZE=`stat -c%s $READS |perl -ane '{$n+=$F[0]}END{$n=$n/10;$n=1e12 if($n>1e12);$n=1e6 if($n<1e6);print int($n)}'`
 	    shift
 	    ;;
         -p|--num_passes)
